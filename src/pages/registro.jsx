@@ -6,6 +6,7 @@ import { auth, storage, db } from "../firebase/firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
+import { Link, useNavigate } from "react-router-dom";
 
 const validarRegistro = (displayName, email, password, file, ev)=> {
 	if (displayName.length === 0 || displayName.length > 12 || displayName.length < 4) {
@@ -57,6 +58,7 @@ const cargarImagen = async (displayName, email, password, file, setError)=> {
 const Registro = () => {
 
 	const [error, setError] = useState(false)
+	const navigate = useNavigate()
 
 	const handleSubmit = async (ev)=> {
 		ev.preventDefault()
@@ -75,7 +77,7 @@ const Registro = () => {
 			} else {
 				await crearUsuario(displayName, email, password, "https://us.123rf.com/450wm/pikepicture/pikepicture1612/pikepicture161200518/68824648-hombre-defecto-marcador-de-posici%C3%B3n-de-avatar-perfil-gris-de-imagen-aislado-en-el-fondo-blanco-para-.jpg")
 			}
-			error && setError(false)
+			navigate("/")
 		} catch (err) {
 			setError(true)
 		}
@@ -98,7 +100,7 @@ const Registro = () => {
 					</label>
 					<button>Registrarse</button>
 				</form>
-				<p>¿Ya tenes cuenta? Inicia sesión</p>
+				<p>¿Ya tenes cuenta? <Link to="/inicio">Inicia sesión</Link></p>
 			</div>
 		</div>
 	)
