@@ -4,7 +4,7 @@ import Registro from "./pages/registro";
 
 function App() {
   return (
-    <Home />
+    <Registro />
   );
 }
 
