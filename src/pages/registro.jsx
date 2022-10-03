@@ -7,6 +7,53 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
 
+const validarRegistro = (displayName, email, password, file, ev)=> {
+	if (displayName.length === 0 || displayName.length > 12 || displayName.length < 4) {
+		ev.target[0].style.borderColor = "red"
+		return false
+	} else if (email.length === 0 || email.length > 40 || email.length < 10) {
+		ev.target[1].style.borderColor = "red"
+		return false
+	} else if (password.length === 0 || password.length > 20 || password.length < 6) {
+		ev.target[2].style.borderColor = "red"
+		return false
+	} else if (file && file.type.slice(0, 5) !== "image") {
+		return false
+	} else {
+		ev.target[0].style.borderColor = "#a7bcff"
+		ev.target[1].style.borderColor = "#a7bcff"
+		ev.target[2].style.borderColor = "#a7bcff"
+		return true
+	}
+}
+
+const crearUsuario = async (displayName, email, password, imagenURL) => {
+	const response = await createUserWithEmailAndPassword(auth, email, password)
+	await updateProfile(response.user, {
+		displayName,
+		photoURL: imagenURL
+	})
+	await setDoc(doc(db, "usuarios", response.user.uid), {
+		uid: response.user.uid,
+		displayName,
+		email,
+		photoURL: imagenURL
+	})
+	await setDoc(doc(db, "usuariosChats", response.user.uid), {})
+}
+
+const cargarImagen = async (displayName, email, password, file, setError)=> {
+	const storageRef = ref(storage, displayName);
+	const uploadTask = uploadBytesResumable(storageRef, file);
+	uploadTask.on(err => setError(true),
+		() => {
+			getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+				await crearUsuario(displayName, email, password, downloadURL)
+			});
+		}
+	);
+}
+
 const Registro = () => {
 
 	const [error, setError] = useState(false)
@@ -18,38 +65,15 @@ const Registro = () => {
 		const password = ev.target[2].value.trim()
 		const file = ev.target[3].files[0]
 
-		if (displayName.length === 0 || email.length === 0 || password.length === 0) {
+		if (!validarRegistro(displayName, email, password, file, ev)) {
 			return setError(true)
-		}
-
-		const crearUsuario = async (imagenURL) => {
-			const response = await createUserWithEmailAndPassword(auth, email, password)
-			await updateProfile(response.user, {
-				displayName,
-				photoURL: imagenURL
-			})
-			await setDoc(doc(db, "usuarios", response.user.uid), {
-				uid: response.user.uid,
-				displayName,
-				email,
-				photoURL: imagenURL
-			})
-			await setDoc(doc(db, "usuariosChats", response.user.uid), {})
 		}
 
 		try {
 			if (file) {
-				const storageRef = ref(storage, displayName);
-				const uploadTask = uploadBytesResumable(storageRef, file);
-				uploadTask.on(err => setError(true),
-					() => {
-						getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-							await crearUsuario(downloadURL)
-						});
-					}
-				);
+				await cargarImagen(displayName, email, password, file, setError)
 			} else {
-				await crearUsuario("https://us.123rf.com/450wm/pikepicture/pikepicture1612/pikepicture161200518/68824648-hombre-defecto-marcador-de-posici%C3%B3n-de-avatar-perfil-gris-de-imagen-aislado-en-el-fondo-blanco-para-.jpg")
+				await crearUsuario(displayName, email, password, "https://us.123rf.com/450wm/pikepicture/pikepicture1612/pikepicture161200518/68824648-hombre-defecto-marcador-de-posici%C3%B3n-de-avatar-perfil-gris-de-imagen-aislado-en-el-fondo-blanco-para-.jpg")
 			}
 			error && setError(false)
 		} catch (err) {
