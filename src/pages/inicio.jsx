@@ -7,10 +7,13 @@ import { Link, useNavigate } from "react-router-dom"
 const Inicio = () => {
 
   const [error, setError] = useState(false)
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
 	const handleSubmit = async (ev)=> {
 		ev.preventDefault()
+    setLoading(true)
+    setError(false)
 		const email = ev.target[0].value.trim()
 		const password = ev.target[1].value.trim()
 
@@ -18,6 +21,7 @@ const Inicio = () => {
       await signInWithEmailAndPassword(auth, email, password)
       navigate("/")
 		} catch (err) {
+      setLoading(false)
 			setError(true)
 		}
 	}
@@ -33,6 +37,11 @@ const Inicio = () => {
                 <input type="password" placeholder="Contraseña" />
                 <button>Iniciar sesión</button>
             </form>
+            {loading && <div className="loading">
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>}
             <p>¿No tenes cuenta? <Link to="/registro">Registrate</Link></p>
         </div>
     </div>

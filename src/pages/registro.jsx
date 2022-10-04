@@ -1,14 +1,12 @@
 import "../styles/formulario.scss"
-import agregarAvatar from "../assets/agregarAvatar.png"
 
 import { useState } from "react";
-import { auth, storage, db } from "../firebase/firebase";
+import { auth, db } from "../firebase/firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
 import { Link, useNavigate } from "react-router-dom";
 
-const validarRegistro = (displayName, email, password, file, ev)=> {
+const validarRegistro = (displayName, email, password, ev)=> {
 	if (displayName.length === 0 || displayName.length > 12 || displayName.length < 4) {
 		ev.target[0].style.borderColor = "red"
 		return false
@@ -17,9 +15,7 @@ const validarRegistro = (displayName, email, password, file, ev)=> {
 		return false
 	} else if (password.length === 0 || password.length > 20 || password.length < 6) {
 		ev.target[2].style.borderColor = "red"
-		return false
-	} else if (file && file.type.slice(0, 5) !== "image") {
-		return false
+		return false 
 	} else {
 		ev.target[0].style.borderColor = "#a7bcff"
 		ev.target[1].style.borderColor = "#a7bcff"
@@ -43,43 +39,31 @@ const crearUsuario = async (displayName, email, password, imagenURL) => {
 	await setDoc(doc(db, "usuariosChats", response.user.uid), {})
 }
 
-const cargarImagen = async (displayName, email, password, file, setError)=> {
-	const storageRef = ref(storage, displayName);
-	const uploadTask = uploadBytesResumable(storageRef, file);
-	uploadTask.on(err => setError(true),
-		() => {
-			getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-				await crearUsuario(displayName, email, password, downloadURL)
-			});
-		}
-	);
-}
-
 const Registro = () => {
 
 	const [error, setError] = useState(false)
+	const [loading, setLoading] = useState(false)
 	const navigate = useNavigate()
 
 	const handleSubmit = async (ev)=> {
 		ev.preventDefault()
+		setLoading(true)
 		const displayName = ev.target[0].value.trim()
 		const email = ev.target[1].value.trim()
 		const password = ev.target[2].value.trim()
-		const file = ev.target[3].files[0]
 
-		if (!validarRegistro(displayName, email, password, file, ev)) {
+		if (!validarRegistro(displayName, email, password, ev)) {
+			setLoading(false)
 			return setError(true)
 		}
 
 		try {
-			if (file) {
-				await cargarImagen(displayName, email, password, file, setError)
-			} else {
 				await crearUsuario(displayName, email, password, "https://us.123rf.com/450wm/pikepicture/pikepicture1612/pikepicture161200518/68824648-hombre-defecto-marcador-de-posici%C3%B3n-de-avatar-perfil-gris-de-imagen-aislado-en-el-fondo-blanco-para-.jpg")
+				navigate("/")
 			}
-			navigate("/")
-		} catch (err) {
+		catch (err) {
 			setError(true)
+			setLoading(false)
 		}
 	}
 
@@ -93,13 +77,13 @@ const Registro = () => {
 					<input required minLength={4} maxLength={12} type="text" placeholder="Nombre de usuario" />
 					<input required minLength={10} maxLength={40} type="email" placeholder="Email" />
 					<input required minLength={6} maxLength={20} type="password" placeholder="Contraseña" />
-					<input type="file" accept="image/*" id="avatar" />
-					<label htmlFor="avatar">
-						<img src={agregarAvatar} alt="Agregar un avatar" />  
-						Elegir avatar
-					</label>
 					<button>Registrarse</button>
 				</form>
+				{loading && <div className="loading">
+					<div></div>
+					<div></div>
+					<div></div>
+				</div>}
 				<p>¿Ya tenes cuenta? <Link to="/inicio">Inicia sesión</Link></p>
 			</div>
 		</div>
