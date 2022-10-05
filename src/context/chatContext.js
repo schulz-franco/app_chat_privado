@@ -20,6 +20,9 @@ export const ChatContextProvider = ({ children })=> {
                     chatId: usuario.uid > accion.payload.uid ? usuario.uid + accion.payload.uid : accion.payload.uid + usuario.uid
                 }
 
+            case "LIMPIAR":
+                return ESTADO_INICIAL
+
             default:
                 return estado
         }

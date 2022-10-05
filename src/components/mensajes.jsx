@@ -9,6 +9,8 @@ const Mensajes = () => {
   const [mensajes, setMensajes] = useState([])
   const { estado } = useContext(ChatContext)
 
+  let emisor = ""
+
   useEffect(()=> {
     const obtenerMensajes = ()=> {
       const unsub = onSnapshot(doc(db, "chats", estado.chatId), doc => {
@@ -22,8 +24,12 @@ const Mensajes = () => {
 
   return (
     <div className="mensajes">
-        {mensajes.map(mensaje => {
-          return <Mensaje key={mensaje.id} contenido={mensaje} />
+        {mensajes.map((mensaje, index) => {
+          if (mensaje.emisorId === emisor) {
+            return <Mensaje key={mensaje.id} contenido={mensaje} imagen={false} />
+          }
+          emisor = mensaje.emisorId
+          return <Mensaje key={mensaje.id} contenido={mensaje} imagen={true} />
         })}
     </div>
   )

@@ -39,7 +39,7 @@
         overflow: hidden;
 
         .lateral {
-            flex: 1.5;
+            flex: 1.2;
             background-color: #3e3c61;
 
             .navbar {
@@ -48,16 +48,11 @@
                 background-color: #32304e;
                 color: #fff;
                 height: 40px;
-                padding: 10px 10px 10px 14px;
+                padding: 10px 20px 10px 14px;
                 justify-content: space-between;
 
-                button {
-                    background-color: #3e3c61;
-                    color: #fff;
-                    border: none;
+                img.salir {
                     cursor: pointer;
-                    padding: 4px 12px;
-                    border-radius: 10px;
                 }
 
                 .usuario {
@@ -67,8 +62,8 @@
 
                     img {
                         background-color: #a7bcff;
-                        width: 28px;
-                        height: 28px;
+                        width: 36px;
+                        height: 36px;
                         border-radius: 50%;
                         object-fit: cover;
                     }
@@ -82,13 +77,12 @@
                 flex-direction: column;
 
                 .error {
-                    padding: 0 10px 10px 10px;
+                    padding: 0 10px 10px 14px;
                     color: lightgray;
                     font-size: .9rem;
                 }
 
                 .form-busqueda {
-                    padding: 10px;
 
                     input {
                         outline: none;
@@ -97,6 +91,7 @@
                         color: #fff;
                         font-size: 1rem;
                         width: 100%;
+                        padding: 10px 14px;
 
                         &::placeholder {
                             color: lightgray;
@@ -107,7 +102,7 @@
             }
 
             .chat-usuario {
-                padding: 10px;
+                padding: 10px 14px;
                 display: flex;
                 align-items: center;
                 gap: 10px;
@@ -134,13 +129,30 @@
                     p {
                         font-size: .9rem;
                         color: lightgray;
+                        overflow: hidden;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                        max-width: 100px;
                     }
                 }
             }
         }
 
+        @keyframes mostrarChat {
+            0% {
+                max-width: 0;
+            }
+
+            100% {
+                max-width: 100%;
+            }
+        }
+
         .chat {
             flex: 3;
+            max-width: 0;
+            animation: mostrarChat .5s;
+            animation-fill-mode: forwards;
 
             .chat-info {
                 height: 40px;
@@ -166,14 +178,14 @@
 
             .mensajes {
                 background-color: rgb(201, 201, 201);
-                padding: 10px;
+                padding: 10px 20px;
                 height: calc(100% - 130px);
                 overflow-y: scroll;
 
                 .mensaje {
                     display: flex;
                     gap: 20px;
-                    margin-bottom: 20px;
+                    margin-bottom: 10px;
 
                     .mensaje-info {
                         display: flex;
@@ -206,6 +218,7 @@
 
                         img {
                             width: 50%;
+                            border-radius: 4px;
                         }
                     }
 
@@ -229,7 +242,7 @@
             .input {
                 height: 50px;
                 background-color: #32304e;
-                padding: 0 10px 0 0;
+                padding: 0 6px 0 0;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
@@ -267,8 +280,14 @@
                     border-top-right-radius: 20px;
                     padding: 4px 20px 4px 10px;
                     text-align: center;
-                    top: -26px;
-                    white-space: nowrap;
+                    top: -27px;
+                    
+                    span {
+                        max-width: 140px;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
 
                     .eliminarImagen {
                         color: #fff;

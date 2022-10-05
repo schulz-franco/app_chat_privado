@@ -9,7 +9,7 @@ const Chat = () => {
 
   const { estado } = useContext(ChatContext)
 
-  return (
+  if (estado.chatId) return (
     <div className='chat'>
       <div className="chat-info">
         <span>{estado.usuario.displayName}</span>

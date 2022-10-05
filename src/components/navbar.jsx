@@ -3,20 +3,16 @@ import { useContext } from "react"
 import { auth } from "../firebase/firebase"
 import { AuthContext } from "../context/authContext"
 import { ChatContext } from "../context/chatContext"
+import Salir from "../assets/salir.png"
 
 const Navbar = () => {
 
-  const {usuario} = useContext(AuthContext)
+  const { usuario } = useContext(AuthContext)
   const { despacho } = useContext(ChatContext)
-
-  const ESTADO_INICIAL = {
-    chatId: null,
-    usuario: {}
-  }
 
   const handleClick = ()=> {
     signOut(auth)
-    despacho({type: "CAMBIAR_USUARIO", payload: ESTADO_INICIAL})
+    despacho({type: "LIMPIAR", payload: {}})
   }
 
   return (
@@ -25,7 +21,7 @@ const Navbar = () => {
         <img src={usuario.photoURL} alt="Avatar" />
         <span>{usuario.displayName}</span>
       </div>
-      <button onClick={handleClick}>Cerrar sesión</button>
+      <img src={Salir} alt="Cerrar sesión" className="salir" onClick={handleClick} width={20} />
     </div>
   )
 }

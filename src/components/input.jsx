@@ -87,7 +87,7 @@ const Input = () => {
   return (
     <div className="input">
         {imagen && <div className="imagenCargada">
-          Imagen - {(imagen.size / 1024).toFixed()} kb  
+          <span>{(imagen.size / 1024).toFixed() + "kb" + " - " + imagen.name}</span>
           <span onClick={ev => {
               setImagen(null)
               inputRef.current.files = null
@@ -96,7 +96,9 @@ const Input = () => {
         <input ref={inputRef} onKeyDown={ev => handleKey(ev)} value={texto !== "" ? texto.trimStart() : texto.trim()} type="text" placeholder="Escribe algo..." onChange={ev=> setTexto(ev.target.value)} />
         <div className="enviar">
             <input accept="image/*" type="file" id="archivo" value={""} onChange={ev => {
-              setImagen(ev.target.files[0])
+              if ((ev.target.files[0].size / 1024 / 1024) < 2) {
+                setImagen(ev.target.files[0])
+              }
               ev.target.files = null
             }} />
             <label htmlFor="archivo">
