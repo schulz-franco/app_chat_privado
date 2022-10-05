@@ -1,15 +1,27 @@
-import React from 'react'
+import { useContext, useEffect, useRef } from 'react'
+import { AuthContext } from '../context/authContext'
+import { ChatContext } from '../context/chatContext'
 
-const Mensaje = () => {
+const Mensaje = ({ contenido }) => {
+
+  const { usuario } = useContext(AuthContext)
+  const { estado } = useContext(ChatContext)
+
+  const mensajeRef = useRef()
+
+  useEffect(()=> {
+    mensajeRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [contenido])
+
   return (
-    <div className='mensaje propietario'>
+    <div ref={mensajeRef} className={"mensaje " + (contenido.emisorId === usuario.uid && "propietario")}>
       <div className="mensaje-info">
-        <img src="https://ivoft.com/wp-content/uploads/2017/11/ulcera-infectada-post-cirugia-Nugget-2-300x300.png" alt="Usuario" />
+        <img src={contenido.emisorId === usuario.uid ? usuario.photoURL : estado.usuario.photoURL} alt="Usuario" />
         <span>Ahora</span>
       </div>
       <div className="mensaje-contenido">
-        <p>Este es un mensaje de prueba!</p>
-        <img src="https://ivoft.com/wp-content/uploads/2017/11/ulcera-infectada-post-cirugia-Nugget-2-300x300.png" alt="Imagen" />
+        {contenido.texto !== "" && <p>{contenido.texto}</p>}
+        {contenido.imagen && <img src={contenido.imagen} alt="Imagen" />}
       </div>
     </div>
   )
