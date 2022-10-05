@@ -17,7 +17,6 @@ const Mensaje = ({ contenido }) => {
     <div ref={mensajeRef} className={"mensaje " + (contenido.emisorId === usuario.uid && "propietario")}>
       <div className="mensaje-info">
         <img src={contenido.emisorId === usuario.uid ? usuario.photoURL : estado.usuario.photoURL} alt="Usuario" />
-        <span>Ahora</span>
       </div>
       <div className="mensaje-contenido">
         {contenido.texto !== "" && <p>{contenido.texto}</p>}

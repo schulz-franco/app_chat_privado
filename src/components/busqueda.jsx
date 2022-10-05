@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { collection, query, where, getDocs, getDoc, setDoc, doc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { db } from '../firebase/firebase'
 import { AuthContext } from "../context/authContext"
@@ -10,6 +10,10 @@ const Busqueda = () => {
   const [error, setError] = useState(false)
   const [loading, setLoading] = useState(false)
   const { usuario } = useContext(AuthContext)
+
+  useEffect(()=> {
+    handleBusqueda()
+  }, [nombreUsuario])
 
   const handleBusqueda = async ()=> {
     setLoading(true)

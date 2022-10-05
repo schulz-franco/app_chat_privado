@@ -9,19 +9,23 @@ const Navbar = () => {
   const {usuario} = useContext(AuthContext)
   const { despacho } = useContext(ChatContext)
 
+  const ESTADO_INICIAL = {
+    chatId: null,
+    usuario: {}
+  }
+
   const handleClick = ()=> {
     signOut(auth)
-    despacho({type: "CAMBIAR_USUARIO", payload: {}})
+    despacho({type: "CAMBIAR_USUARIO", payload: ESTADO_INICIAL})
   }
 
   return (
     <div className='navbar'>
-      <span className="titulo">Chats</span>
       <div className="usuario">
         <img src={usuario.photoURL} alt="Avatar" />
         <span>{usuario.displayName}</span>
-        <button onClick={handleClick}>Salir</button>
       </div>
+      <button onClick={handleClick}>Cerrar sesión</button>
     </div>
   )
 }
