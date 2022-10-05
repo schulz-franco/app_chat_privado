@@ -29,8 +29,6 @@ const Input = () => {
   }, [estado.chatId])
 
   const handleEnviar = async ()=> {
-    
-    inputRef.current.value = ""
 
     if (texto.trim() === "" && !imagen) {
       return
@@ -76,7 +74,6 @@ const Input = () => {
       [estado.chatId+".fecha"]: serverTimestamp()
     })
 
-    setTexto("")
     setImagen(null)
   }
 
@@ -96,7 +93,7 @@ const Input = () => {
         <input ref={inputRef} onKeyDown={ev => handleKey(ev)} value={texto !== "" ? texto.trimStart() : texto.trim()} type="text" placeholder="Escribe algo..." onChange={ev=> setTexto(ev.target.value)} />
         <div className="enviar">
             <input accept="image/*" type="file" id="archivo" value={""} onChange={ev => {
-              if ((ev.target.files[0].size / 1024 / 1024) < 2) {
+              if ((ev.target.files[0].size / 1024) < 2000) {
                 setImagen(ev.target.files[0])
               }
               ev.target.files = null
