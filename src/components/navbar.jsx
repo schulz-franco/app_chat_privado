@@ -7,14 +7,12 @@ import Salir from "../assets/salir.png"
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage"
 import { updateProfile } from "firebase/auth"
 import { v4 as uuid } from "uuid"
-import { doc, onSnapshot, updateDoc } from "firebase/firestore"
+import { doc, getDoc, updateDoc } from "firebase/firestore"
 
 const Navbar = () => {
 
   const { usuario } = useContext(AuthContext)
   const { despacho } = useContext(ChatContext)
-
-  console.log(usuario)
 
   const handleClick = ()=> {
     signOut(auth)
@@ -38,6 +36,23 @@ const Navbar = () => {
           await updateDoc(doc(db, "usuarios", usuario.uid), {
             photoURL: downloadURL
           });
+          // Obtengo los chats del usuario actual
+          let chatsUsuario = await getDoc(doc(db, "usuariosChats", usuario.uid))
+          // Itero esos chats
+          Object.entries(chatsUsuario.data()).forEach(async documento1 => {
+            // Obtengo chats de cada usuario
+            let chatsUsuarioObjetivo = await getDoc(doc(db, "usuariosChats", documento1[1].informacion.uid))
+            // Itero esos chats
+            Object.entries(chatsUsuarioObjetivo.data()).forEach(async documento2 => {
+              // Elijo el chat que sea con el usuario actual
+              if (documento2[1].informacion.uid === usuario.uid) {
+                // Actualizo la URL dentro de ese chat
+                await updateDoc(doc(db, "usuariosChats", documento1[1].informacion.uid), {
+                  [documento1[0] + ".informacion.photoURL"]: downloadURL
+                })
+              }
+            })
+          })
         })
       })
     }
