@@ -11,10 +11,6 @@ const Busqueda = () => {
   const [loading, setLoading] = useState(false)
   const { usuario } = useContext(AuthContext)
 
-  useEffect(()=> {
-    handleBusqueda()
-  }, [nombreUsuario])
-
   const handleBusqueda = async ()=> {
     setLoading(true)
     const q = query(collection(db, "usuarios"), where("displayName", "==", nombreUsuario))
@@ -56,29 +52,30 @@ const Busqueda = () => {
         await setDoc(doc(db, "chats", combinacionIds), {
           mensajes: []
         })
-
-        await updateDoc(doc(db, "usuariosChats", usuario.uid), {
-          [combinacionIds+".informacion"]: {
-            uid: usuarioBuscado.uid,
-            displayName: usuarioBuscado.displayName,
-            photoURL: usuarioBuscado.photoURL
-          },
-          [combinacionIds+".ultimoMensaje"]: "",
-          [combinacionIds+".fecha"]: serverTimestamp()
-        })
-
-        await updateDoc(doc(db, "usuariosChats", usuarioBuscado.uid), {
-          [combinacionIds+".informacion"]: {
-            uid: usuario.uid,
-            displayName: usuario.displayName,
-            photoURL: usuario.photoURL
-          },
-          [combinacionIds+".ultimoMensaje"]: "",
-          [combinacionIds+".fecha"]: serverTimestamp()
-        })
-        setNombreUsuario("")
-        setUsuarioBuscado(null)
       }
+
+      await updateDoc(doc(db, "usuariosChats", usuario.uid), {
+        [combinacionIds+".informacion"]: {
+          uid: usuarioBuscado.uid,
+          displayName: usuarioBuscado.displayName,
+          photoURL: usuarioBuscado.photoURL
+        },
+        [combinacionIds+".ultimoMensaje"]: "",
+        [combinacionIds+".fecha"]: serverTimestamp()
+      })
+
+      await updateDoc(doc(db, "usuariosChats", usuarioBuscado.uid), {
+        [combinacionIds+".informacion"]: {
+          uid: usuario.uid,
+          displayName: usuario.displayName,
+          photoURL: usuario.photoURL
+        },
+        [combinacionIds+".ultimoMensaje"]: "",
+        [combinacionIds+".fecha"]: serverTimestamp()
+      })
+      
+      setNombreUsuario("")
+      setUsuarioBuscado(null)
     } catch (err) {}
   }
 

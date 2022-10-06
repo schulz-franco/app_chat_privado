@@ -1,4 +1,4 @@
-import { arrayUnion, doc, serverTimestamp, Timestamp, updateDoc } from "firebase/firestore"
+import { arrayUnion, doc, getDoc, serverTimestamp, Timestamp, updateDoc } from "firebase/firestore"
 import { useEffect, useState } from "react"
 import { useContext } from "react"
 import { AuthContext } from "../context/authContext"
@@ -72,10 +72,30 @@ const Input = () => {
       [estado.chatId+".fecha"]: serverTimestamp()
     })
 
-    await updateDoc(doc(db, "usuariosChats", estado.usuario.uid), {
-      [estado.chatId+".ultimoMensaje"]: textoMensaje !== "" ? textoMensaje : "Imagen",
-      [estado.chatId+".fecha"]: serverTimestamp()
+    let chatsUsuarioObjetivo = await getDoc(doc(db, "usuariosChats", estado.usuario.uid))
+    let exists = false
+
+    Object.entries(chatsUsuarioObjetivo.data()).forEach(async chat => {
+      if (chat[0] === estado.chatId) {
+        exists = true
+        await updateDoc(doc(db, "usuariosChats", estado.usuario.uid), {
+          [estado.chatId+".ultimoMensaje"]: textoMensaje !== "" ? textoMensaje : "Imagen",
+          [estado.chatId+".fecha"]: serverTimestamp()
+        })
+      }
     })
+
+    if (!exists) {
+      await updateDoc(doc(db, "usuariosChats", estado.usuario.uid), {
+        [estado.chatId+".ultimoMensaje"]: textoMensaje !== "" ? textoMensaje : "Imagen",
+        [estado.chatId+".fecha"]: serverTimestamp(),
+        [estado.chatId+".informacion"]: {
+          displayName: usuario.displayName,
+          photoURL: usuario.photoURL,
+          uid: usuario.uid
+        }
+      })
+    }
 
     setImagen(null)
   }

@@ -125,7 +125,17 @@
                     object-fit: cover;
                 }
 
+                .eliminar {
+                    font-size: 1.4rem;
+                    color: #4c4a77;
+
+                    &:hover {
+                        color: rgba(255, 0, 0, 0.678);
+                    }
+                }
+
                 .chat-info {
+                    margin-right: auto;
 
                     span {
                         font-weight: bold;
