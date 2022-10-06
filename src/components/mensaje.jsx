@@ -10,7 +10,7 @@ const Mensaje = ({ contenido, imagen }) => {
   const mensajeRef = useRef()
 
   useEffect(()=> {
-    mensajeRef.current?.scrollIntoView({ behavior: "smooth" })
+    mensajeRef.current?.scrollIntoView()
   }, [contenido])
 
   const imagenStyles = {

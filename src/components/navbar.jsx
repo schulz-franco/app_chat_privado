@@ -23,7 +23,7 @@ const Navbar = () => {
     let imagen = ev.target.files[0]
     ev.target.files = null
     
-    if (imagen && (imagen.size / 1024 / 1024) < 2) {
+    if (imagen && (imagen.size / 1024 / 1024) < 1) {
       const storageRef = ref(storage, uuid())
       const uploadTask = uploadBytesResumable(storageRef, imagen)
 

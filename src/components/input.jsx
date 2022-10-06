@@ -30,7 +30,10 @@ const Input = () => {
 
   const handleEnviar = async ()=> {
 
-    if (texto.trim() === "" && !imagen) {
+    const textoMensaje = texto
+    setTexto("")
+
+    if (textoMensaje.trim() === "" && !imagen) {
       return
     }
 
@@ -44,7 +47,7 @@ const Input = () => {
           await updateDoc(doc(db, "chats", estado.chatId), {
             mensajes: arrayUnion({
               id: uuid(),
-              texto,
+              texto: textoMensaje,
               emisorId: usuario.uid,
               fecha: Timestamp.now(),
               imagen: downloadURL
@@ -57,7 +60,7 @@ const Input = () => {
       await updateDoc(doc(db, "chats", estado.chatId), {
         mensajes: arrayUnion({
           id: uuid(),
-          texto,
+          texto: textoMensaje,
           emisorId: usuario.uid,
           fecha: Timestamp.now()
         })
@@ -65,12 +68,12 @@ const Input = () => {
     }
 
     await updateDoc(doc(db, "usuariosChats", usuario.uid), {
-      [estado.chatId+".ultimoMensaje"]: texto !== "" ? texto : "Imagen",
+      [estado.chatId+".ultimoMensaje"]: textoMensaje !== "" ? textoMensaje : "Imagen",
       [estado.chatId+".fecha"]: serverTimestamp()
     })
 
     await updateDoc(doc(db, "usuariosChats", estado.usuario.uid), {
-      [estado.chatId+".ultimoMensaje"]: texto !== "" ? texto : "Imagen",
+      [estado.chatId+".ultimoMensaje"]: textoMensaje !== "" ? textoMensaje : "Imagen",
       [estado.chatId+".fecha"]: serverTimestamp()
     })
 
@@ -93,7 +96,7 @@ const Input = () => {
         <input ref={inputRef} onKeyDown={ev => handleKey(ev)} value={texto !== "" ? texto.trimStart() : texto.trim()} type="text" placeholder="Escribe algo..." onChange={ev=> setTexto(ev.target.value)} />
         <div className="enviar">
             <input accept="image/*" type="file" id="archivo" value={""} onChange={ev => {
-              if ((ev.target.files[0].size / 1024) < 2000) {
+              if ((ev.target.files[0].size / 1024 / 1024) < 1) {
                 setImagen(ev.target.files[0])
               }
               ev.target.files = null
