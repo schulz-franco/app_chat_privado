@@ -1,21 +1,13 @@
-import { useContext, useEffect, useRef } from 'react'
-import { AuthContext } from '../context/authContext'
-import { ChatContext } from '../context/chatContext'
+import { useMensaje } from "../hooks/useMensaje"
 
 const Mensaje = ({ contenido, imagen }) => {
 
-  const { usuario } = useContext(AuthContext)
-  const { estado } = useContext(ChatContext)
-
-  const mensajeRef = useRef()
-
-  useEffect(()=> {
-    mensajeRef.current?.scrollIntoView()
-  }, [contenido])
-
-  const imagenStyles = {
-    opacity: imagen ? 1 : 0 
-  }
+  const {
+      usuario,
+      estado,
+      mensajeRef,
+      imagenStyles
+  } = useMensaje(contenido, imagen)
 
   return (
     <div ref={mensajeRef} className={"mensaje " + (contenido.emisorId === usuario.uid && "propietario")}>

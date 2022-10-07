@@ -1,38 +1,23 @@
-import { useState, useEffect, useContext } from "react"
-import { ChatContext } from "../context/chatContext"
-import { doc, onSnapshot } from "firebase/firestore"
-import { db } from "../firebase/firebase"
+import { useMensajes } from "../hooks/useMensajes"
 import Mensaje from "./mensaje"
 
 const Mensajes = () => {
 
-  const [mensajes, setMensajes] = useState([])
-  const { estado } = useContext(ChatContext)
+    const { mensajes } = useMensajes()
+    // Guardo el emisor de cada mensaje para ocultar las imagenes si un usuario envia varios mensajes (solo mostrar la imagen del usuario en el primer mensaje)
+    let emisor = ""
 
-  let emisor = ""
-
-  useEffect(()=> {
-    const obtenerMensajes = ()=> {
-      const unsub = onSnapshot(doc(db, "chats", estado.chatId), doc => {
-        doc.exists() && setMensajes(doc.data().mensajes)
-      })
-  
-      return ()=> unsub()
-    }
-    estado.chatId && obtenerMensajes()
-  }, [estado.chatId])
-
-  return (
-    <div className="mensajes">
-        {mensajes.map((mensaje, index) => {
-          if (mensaje.emisorId === emisor) {
-            return <Mensaje key={mensaje.id} contenido={mensaje} imagen={false} />
-          }
-          emisor = mensaje.emisorId
-          return <Mensaje key={mensaje.id} contenido={mensaje} imagen={true} />
-        })}
-    </div>
-  )
+    return (
+      <div className="mensajes">
+          {mensajes.map(mensaje => {
+            if (mensaje.emisorId === emisor) {
+              return <Mensaje key={mensaje.id} contenido={mensaje} imagen={false} />
+            }
+            emisor = mensaje.emisorId
+            return <Mensaje key={mensaje.id} contenido={mensaje} imagen={true} />
+          })}
+      </div>
+    )
 }
 
 export default Mensajes

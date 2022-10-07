@@ -66,8 +66,8 @@
                     }
 
                     img {
-                        width: 36px;
-                        height: 36px;
+                        width: 40px;
+                        height: 40px;
                         border-radius: 50%;
                         object-fit: cover;
                         cursor: pointer;
@@ -88,6 +88,16 @@
                 }
 
                 .form-busqueda {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    .lupa {
+                        font-size: 2rem;
+                        padding: 0 14px;
+                        color: #222136;
+                        cursor: pointer;
+                    }
 
                     input {
                         outline: none;
@@ -96,7 +106,7 @@
                         color: #fff;
                         font-size: 1rem;
                         width: 100%;
-                        padding: 10px 14px;
+                        padding: 10px 0 10px 14px;
 
                         &::placeholder {
                             color: lightgray;
@@ -130,7 +140,7 @@
                     color: #4c4a77;
 
                     &:hover {
-                        color: rgba(255, 0, 0, 0.678);
+                        color: lightgray;
                     }
                 }
 

@@ -9,6 +9,7 @@ const Chat = () => {
 
   const { estado } = useContext(ChatContext)
 
+  // Verifico que exista un chat
   if (estado.chatId) return (
     <div className='chat'>
       <div className="chat-info">
