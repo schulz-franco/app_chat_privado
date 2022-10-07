@@ -23,11 +23,26 @@ export const useBusqueda = () => {
             const querySnapshot = await getDocs(q);
             // Uso un contador para verificar si existen usuarios
             let contador = 0
+            // Uso un booleano para verificar si el usuario fue bloqueado
+            let bloqueado = false
             // Itero a los usuarios encontrados
             querySnapshot.forEach((doc) => {
                 contador++
                 error && setError(false)
-                setUsuarioBuscado(doc.data())
+                // Reviso los bloqueos del usuario
+                doc.data().bloqueados?.forEach(usuarioBloqueado => {
+                    if (usuarioBloqueado.uid === usuario.uid) {
+                        bloqueado = true
+                    }
+                })
+                // Si el usuario buscado es diferente del usuario actual y tampoco fue bloqueado, muestro la busqueda
+                if (doc.data().displayName !== usuario.displayName && !bloqueado) {
+                    setUsuarioBuscado(doc.data())
+                } else {
+                    setError(true)
+                    setUsuarioBuscado(null)
+                }
+
             });
             // Si no se encontraron usuarios
             if (contador === 0) {
@@ -59,7 +74,7 @@ export const useBusqueda = () => {
             const response = await getDoc(doc(db, "chats", combinacionIds))
             if (!response.exists()) {
                 await setDoc(doc(db, "chats", combinacionIds), {
-                mensajes: []
+                    mensajes: []
                 })
             }
 

@@ -187,11 +187,46 @@
                 justify-content: space-between;
                 padding: 10px 20px;
                 color: lightgray;
+                position: relative;
+
+                .menu {
+                    position: fixed;
+                    display: flex;
+                    flex-direction: column;
+                    background-color: lightgray;
+                    right: 8%;
+                    top: 18%;
+                    border-radius: 4px;
+                    box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.062);
+
+                    span:first-child {
+                        border-top-left-radius: 4px;
+                        border-top-right-radius: 4px;
+                    }
+
+                    span:last-child {
+                        border-bottom-left-radius: 4px;
+                        border-bottom-right-radius: 4px;
+                    }
+
+                    span {
+                        color: #111;
+                        padding: 10px;
+                        font-size: .9rem;
+                        cursor: pointer;
+                        white-space: nowrap;
+
+                        &:hover {
+                            background-color: rgb(189, 189, 189);
+                        }
+                    }
+                }
 
                 .chat-iconos {
                     display: flex;
                     align-items: center;
                     gap: 10px;
+                    
 
                     img {
                         height: 24px;

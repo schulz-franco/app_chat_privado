@@ -31,7 +31,7 @@ const Chats = () => {
 
       {Object.entries(chats)?.sort((a, b)=> b[1].fecha - a[1].fecha).map(usuario => {
         return(
-          <Conversacion usuario={usuario} handleClick={handleClick} handleEliminar={handleEliminar} />
+          <Conversacion key={usuario[0]} usuario={usuario} handleClick={handleClick} handleEliminar={handleEliminar} />
         )
       })}
 

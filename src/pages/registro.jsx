@@ -3,11 +3,23 @@ import "../styles/formulario.scss"
 import { useState } from "react";
 import { auth, db } from "../firebase/firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { collection, doc, getDocs, query, setDoc, where } from "firebase/firestore";
 import { Link, useNavigate } from "react-router-dom";
 
-const validarRegistro = (displayName, email, password, ev)=> {
-	if (displayName.length === 0 || displayName.length > 12 || displayName.length < 4) {
+const validarRegistro = async (displayName, email, password, ev)=> {
+	// Traigo a los usuarios que existan con el nombre usado para registrarse
+	const q = query(collection(db, "usuarios"), where("displayName", "==", displayName))
+	const querySnapshot = await getDocs(q);
+	let contador = 0
+	// Si existen usuarios, lo indico a la variable contador
+	querySnapshot.forEach((doc) => {
+		contador++
+	});
+	// Si existen usuarios, muestro error
+	if (contador !== 0) {
+		ev.target[0].style.borderColor = "red"
+		return false
+	} else if (displayName.length === 0 || displayName.length > 12 || displayName.length < 4) {
 		ev.target[0].style.borderColor = "red"
 		return false
 	} else if (email.length === 0 || email.length > 40 || email.length < 10) {
@@ -52,7 +64,9 @@ const Registro = () => {
 		const email = ev.target[1].value.trim()
 		const password = ev.target[2].value.trim()
 
-		if (!validarRegistro(displayName, email, password, ev)) {
+		const validacion = await validarRegistro(displayName, email, password, ev)
+
+		if (!validacion) {
 			setLoading(false)
 			return setError(true)
 		}
