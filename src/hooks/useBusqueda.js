@@ -16,17 +16,20 @@ export const useBusqueda = () => {
 
         setLoading(true)
 
-        // Traer a los usuarios cuando su nombre sea igual al buscado
-        const q = query(collection(db, "usuarios"), where("displayName", "==", nombreUsuario))
-        
+        // Traigo a un usuario cuando su nombre sea igual al buscado
+        const queryUsuarioBuscado = query(collection(db, "usuarios"), where("displayName", "==", nombreUsuario.toLowerCase()))
+        // Traigo al usuario actual
+        const queryUsuarioActual = query(collection(db, "usuarios"), where("displayName", "==", usuario.displayName.toLowerCase()))
+
         try {
-            const querySnapshot = await getDocs(q);
+            const querySnapshotUsuarioBuscado = await getDocs(queryUsuarioBuscado);
+            const querySnapshotUsuarioActual = await getDocs(queryUsuarioActual)
             // Uso un contador para verificar si existen usuarios
             let contador = 0
             // Uso un booleano para verificar si el usuario fue bloqueado
             let bloqueado = false
-            // Itero a los usuarios encontrados
-            querySnapshot.forEach((doc) => {
+            // Reviso si existe el usuario buscado
+            querySnapshotUsuarioBuscado.forEach(doc => {
                 contador++
                 error && setError(false)
                 // Reviso los bloqueos del usuario
@@ -34,6 +37,15 @@ export const useBusqueda = () => {
                     if (usuarioBloqueado.uid === usuario.uid) {
                         bloqueado = true
                     }
+                })
+                // Reviso los bloqueos del usuario actual
+                querySnapshotUsuarioActual.forEach(usuarioActual => {
+                    // Si el usuario actual tiene bloqueado al usuario buscado
+                    usuarioActual.data().bloqueados?.forEach(usuarioBloqueado => {
+                        if (usuarioBloqueado.uid === doc.data().uid) {
+                            bloqueado = true
+                        }
+                    })
                 })
                 // Si el usuario buscado es diferente del usuario actual y tampoco fue bloqueado, muestro la busqueda
                 if (doc.data().displayName !== usuario.displayName && !bloqueado) {

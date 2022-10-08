@@ -60,7 +60,7 @@ const Registro = () => {
 	const handleSubmit = async (ev)=> {
 		ev.preventDefault()
 		setLoading(true)
-		const displayName = ev.target[0].value.trim()
+		const displayName = ev.target[0].value.trim().toLowerCase()
 		const email = ev.target[1].value.trim()
 		const password = ev.target[2].value.trim()
 
