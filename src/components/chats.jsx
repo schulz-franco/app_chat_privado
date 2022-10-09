@@ -18,7 +18,7 @@ const Conversacion = ({ usuario, handleClick, handleEliminar })=> {
   )
 }
 
-const Chats = () => {
+export const Chats = () => {
 
   const {
       chats,
@@ -38,5 +38,3 @@ const Chats = () => {
     </div>
   )
 }
-
-export default Chats

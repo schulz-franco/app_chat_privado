@@ -11,7 +11,8 @@ export const useInput = () => {
 
     const [texto, setTexto] = useState("")
     const [imagen, setImagen] = useState(null)
-  
+    const [sizeError, setSizeError] = useState(false)
+
     // Informacion del usuario actual
     const { usuario } = useContext(AuthContext)
     // Informacion del chat actual (id e informacion del otro usuario)
@@ -87,7 +88,6 @@ export const useInput = () => {
         Object.entries(chatsUsuarioObjetivo.data()).forEach(async chat => {
             // Si existe un chat del otro usuario con el usuario actual
             if (chat[0] === estado.chatId) {
-                // Indico que existe
                 exists = true
             // Actualizo el ultimo mensaje en el chat del otro usuario
             await updateDoc(doc(db, "usuariosChats", estado.usuario.uid), {
@@ -124,6 +124,8 @@ export const useInput = () => {
         texto,
         setTexto,
         handleEnviar,
-        handleKey
+        handleKey,
+        sizeError,
+        setSizeError
     }
 }

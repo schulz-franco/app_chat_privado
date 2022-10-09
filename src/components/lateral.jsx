@@ -1,13 +1,18 @@
 import Navbar from "./navbar"
 import Busqueda from "./busqueda"
-import Chats from "./chats"
+import { Chats } from "./chats"
+import { Bloqueados } from "./bloqueados"
+
 
 const Lateral = () => {
   return (
     <div className='lateral'>
-      <Navbar />
-      <Busqueda />
-      <Chats />
+      <div>
+        <Navbar />
+        <Busqueda />
+        <Chats />
+      </div>
+      <Bloqueados />
     </div>
   )
 }

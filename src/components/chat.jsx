@@ -12,10 +12,10 @@ const Opciones = ({ despacho, estado })=> {
 		<>
 			<div className="chat-iconos">
 				<img className="opciones" onClick={()=> setOpen(!open)} src={Menu} alt="Mas opciones" />
+				{open && <div onMouseLeave={()=> setOpen(false)} className="menu">
+					<span onClick={()=> despacho({type: "BLOQUEAR_USUARIO", payload: estado})}>Bloquear</span>
+				</div>}
 			</div>
-			{open && <div onMouseLeave={()=> setOpen(false)} className="menu">
-				<span onClick={()=> despacho({type: "BLOQUEAR_USUARIO", payload: estado})}>Bloquear</span>
-			</div>}
 		</>
 	)
 }
