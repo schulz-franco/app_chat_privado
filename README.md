@@ -1,3 +1,13 @@
+# Funciones
+
+- Crear cuenta / iniciar sesión
+- Actualizar foto de perfil < 1mb
+- Buscar a un usuario
+- Agregar a chats actuales
+- Abrir chat con un usuario, envío de mensajes e imagenes
+- Eliminar usuario 
+- Bloqueaar y desbloquear usuario
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
